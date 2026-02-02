@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мини-игры</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <button id="menuBtn">🎮 Мини-игры</button>
+    <div class="menu" id="menu">
+        <button onclick="showGame('clicker')">Кликер</button>
+        <button onclick="showGame('adventure')">Генератор приключений</button>
+        <button onclick="showGame('guess')">Угадай число</button>
+    </div>
+</nav>
+
+<main>
+
+    <!-- КЛИКЕР -->
+    <section class="card game" id="clicker">
+        <h2>Кликер</h2>
+        <p>Осталось времени: <b id="time">30</b>s</p>
+        <p>Счёт: <b id="score">0</b></p>
+        <p>Рекорд: <b id="record">0</b></p>
+
+        <button class="btn blue" id="clickBtn">НАЖМИ МЕНЯ!</button>
+        <button class="btn green" id="resetBtn">Сбросить счёт</button>
+    </section>
+
+    <!-- ГЕНЕРАТОР -->
+    <section class="card game" id="adventure">
+        <h2>Генератор приключений 🏰⚔</h2>
+
+        <div class="box">
+            <b>Текущее приключение:</b>
+            <p id="currentStory">Нажмите кнопку</p>
+        </div>
+
+        <button class="btn blue" id="genStoryBtn">Сгенерировать приключение</button>
+        <button class="btn blue" id="clearStoryBtn">Очистить историю</button>
+
+        <div class="box">
+            <b>История приключений:</b>
+            <div id="storyHistory"></div>
+        </div>
+    </section>
+
+    <!-- УГАДАЙ ЧИСЛО -->
+    <section class="card game" id="guess">
+        <h2>Угадай число от 1 до 100</h2>
+        <p>Осталось попыток: <b id="tries">10</b></p>
+
+        <input type="number" id="guessInput" min="1" max="100">
+        <div class="buttons">
+            <button class="btn gray" id="checkBtn">Проверить</button>
+            <button class="btn blue" id="newGameBtn">Новая игра</button>
+        </div>
+
+        <div id="message"></div>
+        <p>Рекорд: <b id="best">—</b></p>
+    </section>
+
+</main>
+
+<script>
+/* навигация */
+const menuBtn = document.getElementById('menuBtn');
+const menu = document.getElementById('menu');
+
+menuBtn.onclick = () => {
+    menu.classList.toggle('open');
+};
+
+function showGame(id) {
+    document.querySelectorAll('.game').forEach(g => g.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+}
+</script>
+
+<script src="js/clicker.js"></script>
+<script src="js/adventure.js"></script>
+<script src="js/guess.js"></script>
+
+</body>
+</html>
