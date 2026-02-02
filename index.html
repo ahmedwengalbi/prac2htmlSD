@@ -2,72 +2,126 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Мини-игры</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мини-игры | Практическая №2</title>
+    <link rel="icon" href="https://fav.farm/🎮">
+    <style>
+        /* CSS ПРЯМО ТУТ */
+        :root { --primary: #6c5ce7; --bg: #f8f9fa; --text: #2d3436; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+        .navbar { background: #fff; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: bold; color: var(--primary); }
+        .dropdown { position: relative; }
+        .dropbtn { background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
+        .dropdown-content { display: none; position: absolute; right: 0; background: white; min-width: 200px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 8px; }
+        .dropdown-content a { color: var(--text); padding: 12px 20px; text-decoration: none; display: block; }
+        .dropdown-content a:hover { background: #f1f1f1; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .content { display: flex; justify-content: center; padding: 40px 20px; }
+        .game-card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); width: 100%; max-width: 500px; text-align: center; display: none; }
+        .game-card.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 15px; font-size: 1.1rem; border-radius: 12px; cursor: pointer; width: 100%; margin-top: 15px; }
+        .btn-secondary { background: none; border: 1px solid #ddd; padding: 8px 16px; border-radius: 8px; cursor: pointer; color: #888; margin-top: 10px; }
+        .stats { display: flex; justify-content: space-around; margin: 20px 0; font-weight: bold; }
+        .adventure-box { background: #f1f2f6; padding: 15px; border-radius: 10px; margin: 15px 0; min-height: 50px; }
+        input[type="number"] { padding: 10px; border: 2px solid #ddd; border-radius: 8px; width: 80px; text-align: center; font-size: 1.1rem; }
+    </style>
 </head>
 <body>
 
-<nav>
-    <button id="menuBtn">Мини-игры</button>
-    <div id="menu">
-        <button onclick="showGame('clicker')">Кликер</button>
-        <button onclick="showGame('adventure')">Генератор приключений</button>
-        <button onclick="showGame('guess')">Угадай число</button>
-    </div>
-</nav>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">PortfolioGames</div>
+            <div class="dropdown">
+                <button class="dropbtn" id="active-game-name">Выбрать игру ▼</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="showGame('clicker', 'Кликер')">🕹 Кликер</a>
+                    <a href="#" onclick="showGame('adventure', 'Генератор')">🗺 Генератор приключений</a>
+                    <a href="#" onclick="showGame('guess', 'Угадай число')">🔢 Угадай число</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<!-- КЛИКЕР -->
-<div class="game" id="clicker">
-    <h2>Кликер</h2>
-    <p>Время: <span id="time">30</span></p>
-    <p>Очки: <span id="score">0</span></p>
-    <p>Рекорд: <span id="record">0</span></p>
+    <main class="content">
+        <section id="clicker" class="game-card active">
+            <h2>🕹 Игра «Кликер»</h2>
+            <p>Жми на кнопку! У тебя 30 секунд.</p>
+            <div class="stats">
+                <div>Счёт: <span id="score">0</span></div>
+                <div>Рекорд: <span id="high-score">0</span></div>
+                <div>Время: <span id="timer">30</span>с</div>
+            </div>
+            <button id="click-btn" class="btn-main">КЛИКАЙ!</button>
+            <button onclick="resetClicker()" class="btn-secondary">Сбросить</button>
+        </section>
 
-    <button id="clickBtn">КЛИК</button>
-    <button id="resetBtn">Сброс</button>
-</div>
+        <section id="adventure" class="game-card">
+            <h2>🗺 Генератор приключений</h2>
+            <div class="adventure-box"><p id="adventure-result">Нажми кнопку!</p></div>
+            <button onclick="generateAdventure()" class="btn-main">Сгенерировать</button>
+        </section>
 
-<!-- ГЕНЕРАТОР -->
-<div class="game" id="adventure">
-    <h2>Генератор приключений</h2>
-    <p id="currentStory">Нажмите кнопку</p>
+        <section id="guess" class="game-card">
+            <h2>🔢 Угадай число</h2>
+            <p>Число от 1 до 100. Попыток: <span id="attempts-count">10</span></p>
+            <input type="number" id="guess-input" placeholder="0">
+            <button onclick="checkGuess()" class="btn-main">Проверить</button>
+            <p id="guess-feedback"></p>
+            <button id="guess-reset" onclick="initGuessGame()" class="btn-secondary" style="display:none">Заново</button>
+        </section>
+    </main>
 
-    <button id="genStoryBtn">Сгенерировать</button>
-    <button id="clearStoryBtn">Очистить</button>
+    <script>
+        // JS ПРЯМО ТУТ
+        function showGame(id, name) {
+            document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('active-game-name').innerText = name + " ▼";
+        }
 
-    <div id="storyHistory"></div>
-</div>
+        let score = 0, timeLeft = 30, timerId = null, isPlaying = false;
+        const clickBtn = document.getElementById('click-btn');
+        document.getElementById('high-score').innerText = localStorage.getItem('clickerRecord') || 0;
 
-<!-- УГАДАЙ ЧИСЛО -->
-<div class="game" id="guess">
-    <h2>Угадай число (1–100)</h2>
-    <p>Попытки: <span id="tries">10</span></p>
+        clickBtn.addEventListener('click', () => {
+            if (!isPlaying && timeLeft === 30) {
+                isPlaying = true;
+                timerId = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timer').innerText = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerId); isPlaying = false;
+                        alert("Финиш! Очки: " + score);
+                        if(score > (localStorage.getItem('clickerRecord')||0)) localStorage.setItem('clickerRecord', score);
+                    }
+                }, 1000);
+            }
+            if (timeLeft > 0) {
+                score++; document.getElementById('score').innerText = score;
+                clickBtn.style.backgroundColor = `hsl(${Math.random()*360}, 70%, 50%)`;
+            }
+        });
 
-    <input type="number" id="guessInput" min="1" max="100">
-    <br><br>
-    <button id="checkBtn">Проверить</button>
-    <button id="newGameBtn">Новая игра</button>
+        function resetClicker() { clearInterval(timerId); score=0; timeLeft=30; isPlaying=false; document.getElementById('score').innerText='0'; document.getElementById('timer').innerText='30'; }
 
-    <p id="message"></p>
-</div>
+        function generateAdventure() {
+            const h=['Рыцарь','Маг','Пират'], p=['в лесу','в замке','в космосе'], f=['дракона','робота','призрака'];
+            document.getElementById('adventure-result').innerText = `${h[Math.floor(Math.random()*3)]} ${p[Math.floor(Math.random()*3)]} победил ${f[Math.floor(Math.random()*3)]}!`;
+        }
 
-<script>
-const menuBtn = document.getElementById('menuBtn');
-const menu = document.getElementById('menu');
-
-menuBtn.onclick = () => {
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-};
-
-function showGame(id) {
-    document.querySelectorAll('.game').forEach(g => g.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-}
-</script>
-
-<script src="js/clicker.js"></script>
-<script src="js/adventure.js"></script>
-<script src="js/guess.js"></script>
-
+        let secret=Math.floor(Math.random()*100)+1, att=10;
+        function checkGuess() {
+            const v = parseInt(document.getElementById('guess-input').value);
+            const fb = document.getElementById('guess-feedback');
+            att--; document.getElementById('attempts-count').innerText=att;
+            if(v===secret) { fb.innerText="Угадал!"; fb.style.color="green"; document.getElementById('guess-reset').style.display='block'; }
+            else if(att<=0) { fb.innerText="Конец! Это было "+secret; document.getElementById('guess-reset').style.display='block'; }
+            else { fb.innerText = v > secret ? "Меньше" : "Больше"; fb.style.color="orange"; }
+        }
+        function initGuessGame() { secret=Math.floor(Math.random()*100)+1; att=10; document.getElementById('attempts-count').innerText=att; document.getElementById('guess-feedback').innerText=''; document.getElementById('guess-reset').style.display='none'; }
+    </script>
 </body>
 </html>
